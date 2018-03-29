@@ -17,7 +17,8 @@ public class ParserManager {
   private static final File data;
   private String emailAdress;
   private String searchValue;
-
+  private String emailFrom;
+  private String password;
 
   static {
     data = new File(CurrentDir() + File.separator + "ParsersData");
@@ -195,7 +196,7 @@ public class ParserManager {
 
         if ((descriptionContainsSearchVal(description, title, searchValue)) && priceInRange(price) && !ads.containsKey(ad) && !ads.containsValue(date)) {
           new Thread(new EmailDemon(title, price + " \n" + description + " время: \n" +
-                  "" + date + "\n" + ad.getUrl(), emailAdress)).start();
+                  "" + date + "\n" + ad.getUrl(), emailAdress, emailFrom, password)).start();
 
         }
         System.out.println("##########################################################################");
@@ -296,6 +297,14 @@ public class ParserManager {
 
   public void setPriceRange(int[] priceRange) {
     this.priceRange = priceRange;
+  }
+
+  public void setEmailFrom(String emailFrom) {
+    this.emailFrom = emailFrom;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   private static class Instance {

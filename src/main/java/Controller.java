@@ -15,6 +15,8 @@ public class Controller {
   private static final int[] priceRange = new int[2];
   private static final ParserManager parserManager = ParserManager.getInstance();
   private static final Controller controller = new Controller();
+  private static final String mail_from = "example@yandex.ru";
+  private static final String password = "secret";
 
 
   public static void main(String[] args) throws IOException {
@@ -32,12 +34,14 @@ public class Controller {
     String[] stringsRangePrice = settingsFromFile.get(3).split("-");
     priceRange[0] = Integer.parseInt(stringsRangePrice[0]);
     priceRange[1] = Integer.parseInt(stringsRangePrice[1]);
+    String mail_from = settingsFromFile.get(4);
+    String password = settingsFromFile.get(5);
 
     System.out.println(mainUrl + " " + email + " " + searchValue);
 
 
     try {
-      controller.startProgram(mainUrl, email, searchValue);
+      controller.startProgram(mainUrl, email, searchValue, mail_from, password);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -67,6 +71,8 @@ public class Controller {
     defaultValues.add(1, eMail);
     defaultValues.add(2, searchValue);
     defaultValues.add(3, "0-0");
+    defaultValues.add(4, mail_from);
+    defaultValues.add(5, password);
 
     try {
       BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -79,7 +85,7 @@ public class Controller {
         count++;
         str = reader.readLine();
       }
-      if (strings.size() == 4) return strings;
+      if (strings.size() == 6) return strings;
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -87,7 +93,9 @@ public class Controller {
     return defaultValues;
   }
 
-  private void startProgram(String mainUrl, String email, String searchValue) {
+  private void startProgram(String mainUrl, String email, String searchValue, String email_from, String password) {
+    parserManager.setEmailFrom(email_from);
+    parserManager.setPassword(password);
     parserManager.startProxySearchThread();
     parserManager.setEmailAdress(email);
     parserManager.setMainUrl(mainUrl);

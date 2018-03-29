@@ -7,12 +7,10 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class EmailSender {
-  private static final String username = "chernov.alexe2017@yandex.ru";
-  private static final String password = "";
   private static final String smtpHost = "smtp.yandex.ru";
 
 
-  public static synchronized void send(String title, String text, String addres) {
+  public static synchronized void send(String title, String text, String addres, String username, String password) {
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
