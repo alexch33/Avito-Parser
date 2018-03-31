@@ -10,7 +10,11 @@ public class AdFactoryFromAdUrl {
 
   public static Ad createNewAd(URL url) {
     Document document = null;
-    document = Searcher.parse(url.toString());
+    try {
+      document = Searcher.parse(url.toString());
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     sleep();
 
 

@@ -26,6 +26,7 @@ public class ProxySearcher implements Runnable {
   }
 
   private boolean fetchProxyList() {
+  try {
     Document proxyPage = Searcher.parse(PROXY_URL);
     assert proxyPage != null;
     Elements elements = proxyPage.select("#tbl_proxy_list > tbody:nth-child(2) > tr");
@@ -39,19 +40,24 @@ public class ProxySearcher implements Runnable {
       }
     }
     return proxyList.size() > 0;
+  }catch(Exception e) {
+    e.printStackTrace();
+  }
+    return false;
   }
 
   private void getGoodProxies() {
-    fetchProxyList();
-    for (Map.Entry<String, Integer> ipPort : proxyList.entrySet()) {
-      try {
-        Proxy test = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ipPort.getKey(), ipPort.getValue()));
-        Jsoup.connect("https://www.google.ru/").timeout(10000).proxy(test).get();
-        System.out.println("Proxy was found!" + test);
-        proxies.add(test);
-      } catch (Exception e) {
-      }
-    }
+   if(fetchProxyList()) {
+     for (Map.Entry<String, Integer> ipPort : proxyList.entrySet()) {
+       try {
+         Proxy test = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ipPort.getKey(), ipPort.getValue()));
+         Jsoup.connect("https://www.google.ru/").timeout(10000).proxy(test).get();
+         System.out.println("Proxy was found!" + test);
+         proxies.add(test);
+       } catch (Exception e) {
+       }
+     }
+   }
   }
 
   @Override
