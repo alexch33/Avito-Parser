@@ -29,9 +29,9 @@ public class ParserManager {
     return data;
   }
 
-  public static String CurrentDir() {
+  private static String CurrentDir() {
     String path = System.getProperty("user.dir");
-    String FileSeparator = (String) System.getProperty("file.separator");
+    String FileSeparator = System.getProperty("file.separator");
     return path.substring(0, path.lastIndexOf(FileSeparator) + 1);
   }
 
@@ -112,7 +112,7 @@ public class ParserManager {
       System.out.println("Object history READING...Done");
 
     } catch (EOFException e) {
-      ads = new HashMap<Ad, Date>();
+      ads = new HashMap<>();
       System.out.println("Object history READING...not Done, new file object history created");
     } catch (IOException | ClassNotFoundException e) {
       e.printStackTrace();
@@ -176,7 +176,7 @@ public class ParserManager {
     for (Map.Entry<URL, Date> urlStringEntry : urlDateMap.entrySet()) {
       URL url = urlStringEntry.getKey();
       Date dateFromBoard = urlStringEntry.getValue();
-      System.out.println(url + " date: " + dateFromBoard);
+      System.out.println("Url seen: " + url + " date: " + (dateFromBoard == null ? "Not Today" : dateFromBoard));
       if (!AvitoDateParser.isToday(dateFromBoard)) continue;
 
 
@@ -189,10 +189,11 @@ public class ParserManager {
         int price = ad.getPrice();
         String description = ad.getDescription();
         Date date = ad.getDate();
-        if (descriptionContainsSearchVal(description, title, searchValue))
-          System.out.println(title + "\n" +
-                  price + "\n" +
-                  description + "!Contained searchValue!!! " + searchValue + "\n" + ad.getUrl());
+//        if (descriptionContainsSearchVal(description, title, searchValue))
+//          System.out.println(title + "\n" +
+//                  price + "\n" +
+//                  description + "!Contained searchValue!!! " + searchValue + "\n" + ad.getUrl());
+
 
         if ((descriptionContainsSearchVal(description, title, searchValue)) && priceInRange(price) && !ads.containsKey(ad) && !ads.containsValue(date)) {
           new Thread(new EmailDemon(title, price + " \n" + description + " время: \n" +

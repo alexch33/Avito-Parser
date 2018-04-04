@@ -10,6 +10,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 class Searcher {
@@ -20,6 +22,8 @@ class Searcher {
   private static List<Proxy> proxyList = new ArrayList<>();
   private static final String userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
   private static ProxySetter proxySetter;
+  private static final Logger logger = Logger.getLogger("Searcher parse()");
+
 
   public static void setProxyList(List<Proxy> proxyList) {
     Searcher.proxyList = proxyList;
@@ -102,26 +106,35 @@ class Searcher {
 
     result = getUrlsAndDates(sellBoardElements);
 //        System.out.println("result <<<<<<<<<<<<<<<<<<<<" + result);
-    if (result != null) return result;
-
-    return result;
-  }
+     return result;
+    }
 
 
   public static Document parse(String url) {
+    Document document = null;
+
     try {
       if (!proxyList.isEmpty()) {
-        System.out.println("USING PROXY....................................................." + " " + proxyList.get(0));
-        return Jsoup.connect(url)
-                .userAgent(userAgent)
-                .proxy(proxyList.get(0))
-                .get();
+        logger.log(Level.WARNING, "Using Proxy...................." + " " + proxyList.get(0) + "\n" + "url: " + url);
+        try {
+         document = Jsoup.connect(url)
+                  .userAgent(userAgent)
+                  .proxy(proxyList.get(0))
+                  .get();
+        }catch (IOException e) {
+          e.printStackTrace();
+          deleteLastProxy();
+        }
 
       } else {
-        System.out.println("WITHOUT PROXY.....................................................");
-        return Jsoup.connect(url)
-                .userAgent(userAgent)
-                .get();
+        logger.log(Level.WARNING, "Without Proxy...................." + "\n" + "url: " + url);
+        try {
+         document = Jsoup.connect(url)
+                  .userAgent(userAgent)
+                  .get();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
 
     } catch (Exception e) {
@@ -130,7 +143,10 @@ class Searcher {
       }
       e.printStackTrace();
     }
-    return null;
+    assert document != null;
+    System.out.println("Banned: " + document.toString().contains("Доступ с Вашего IP временно ограничен"));
+
+    return document;
   }
 
   static void deleteLastProxy() {
