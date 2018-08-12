@@ -33,8 +33,7 @@ public class Controller {
     String mail_from = settingsFromFile.get(3);
     String password = settingsFromFile.get(4);
 
-    System.out.println(mainUrl + " " + email + " " + searchValue);
-
+    System.out.printf("Starting with settings: %s %s %s %s %s\n", mainUrl, email, searchValue, mail_from, password);
 
     try {
       controller.startProgram(mainUrl, email, searchValue, mail_from, password);
@@ -75,12 +74,12 @@ public class Controller {
       ArrayList<String> strings = new ArrayList<>();
       int count = 0;
       while ((str != null)) {
-        System.out.println("settings : strings readed from settings : " + str);
+        System.out.println("settings : string was read from file settings : " + str);
         strings.add(count, str);
         count++;
         str = reader.readLine();
       }
-      if (strings.size() == 6) return strings;
+      if (strings.size() == 5) return strings;
 
     } catch (IOException e) {
       e.printStackTrace();
