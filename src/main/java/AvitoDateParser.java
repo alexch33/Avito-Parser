@@ -1,6 +1,6 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AvitoDateParser {
   private final static String TODAY = "сегодня";
@@ -8,101 +8,55 @@ public class AvitoDateParser {
 
 
   public static Date avitoDatePars(String date) {
-
-    if (isNumber(date.charAt(0))) {
-      // return parseIfBeginNumber(date);
-      return null;
-    }
-    if (date.charAt(0) == 'с') {
-      return parseIfBeginC(date);
-    }
-    if (date.charAt(0) == 'в') {
-      return null;
-// return parseIfBeginB(date);
+    String hours = getFirstStringGroupRegex(date, "^(\\d+).+(час).*");
+    String minutes = getFirstStringGroupRegex(date, "^(\\d+).+(мин).*");
+    String today = getFirstStringGroupRegex(date, "сегодня.+(\\d{2}:\\d{2})");
+    if (hours != null) {
+      return calculateDateFromHours(hours);
+    } else if (minutes != null) {
+      return calculateDateFromMinutes(minutes);
+    } else if (today != null) {
+      String todayHours = getFirstStringGroupRegex(today, "(\\d{2}):\\d{2}");
+      String todayMinutes = getFirstStringGroupRegex(today, "\\d{2}:(\\d{2})");
+      if ((todayHours != null) && (todayMinutes != null)) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR, Integer.parseInt(todayHours));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(todayMinutes));
+        return calendar.getTime();
+      }
     }
 
     return null;
   }
 
-  private static Date parseIfBeginB(String date) {
-    System.out.println(date + " begins B");
-
-    int hh, mm;
-    String[] strings = date.split(" ");
-    String[] time = strings[strings.length - 1].split(":");
-    hh = Integer.parseInt(time[0].substring(2).trim());
-    mm = Integer.parseInt(time[1]);
-
-    Calendar calendar = new GregorianCalendar();
-    int day = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-    calendar.set(Calendar.DAY_OF_MONTH, day);
-    calendar.set(Calendar.HOUR_OF_DAY, hh);
-    calendar.set(Calendar.MINUTE, mm);
-    calendar.set(Calendar.SECOND, 0);
-    calendar.set(Calendar.MILLISECOND, 0);
-
+   private static String getFirstStringGroupRegex(String userNameString, String pattern){
+    Pattern p = Pattern.compile(pattern);
+    Matcher m = p.matcher(userNameString);
+    if (m.find())
+    {
+      return m.group(1);
+    }
     return null;
   }
 
-  private static Date parseIfBeginC(String date) {
-    // System.out.println(date + " begins C");
-    int hh, mm;
-    String[] strings = date.split(" ");
-    String[] time = strings[strings.length - 1].split(":");
-    // System.out.println(time[0].substring(2).trim() + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    // System.out.println(Arrays.toString(time) + " " + time[0] + " " + time[1]);
-    String datetmp;
-    if (time[0].length() > 2)
-      datetmp = time[0].substring(2).trim();
-    else
-      datetmp = time[0];
-    //System.out.println(datetmp + "**************************************************************");
-    hh = Integer.parseInt(datetmp);
-    mm = Integer.parseInt(time[1]);
-
-    Calendar calendar = new GregorianCalendar();
-    calendar.set(Calendar.HOUR_OF_DAY, hh);
-    calendar.set(Calendar.MINUTE, mm);
-    calendar.set(Calendar.SECOND, 0);
-    calendar.set(Calendar.MILLISECOND, 0);
-
-    return calendar.getTime();
+   private static Date calculateDateFromHours(String hoursBack) {
+    if (hoursBack != null) {
+      int hours = Integer.parseInt(hoursBack.trim());
+      Calendar cal = Calendar.getInstance();
+      cal.add(Calendar.HOUR, -hours);
+      return cal.getTime();
+    }
+    return null;
   }
 
-  private static Date parseIfBeginNumber(String date) {
-    //System.out.println(date + " begins Num");
-
-
-    String[] strings = date.split(" ");
-    String day = strings[0].trim();
-    String month = strings[1].trim();
-    month = replaceMonth(month);
-    String time = strings[strings.length - 1].trim();
-
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append(day).append(" ").append(month).append(" ").append(time);
-    System.out.println("string builder: " + stringBuilder.toString());
-    String adDate = stringBuilder.toString();
-    System.out.println("adDate: " + adDate);
-
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM hh:mm", new Locale("ru", "RU"));
-    Date date1;
-    try {
-      date1 = simpleDateFormat.parse(adDate);
-    } catch (ParseException e) {
-      date1 = new Date();
-      e.printStackTrace();
+  private static Date calculateDateFromMinutes(String minutesBack) {
+    if (minutesBack != null) {
+      int minutes = Integer.parseInt(minutesBack.trim());
+      Calendar cal = Calendar.getInstance();
+      cal.add(Calendar.MINUTE, -minutes);
+      return cal.getTime();
     }
-
-    Calendar calendar = new GregorianCalendar();
-    int year = calendar.get(Calendar.YEAR);
-    calendar.setTime(date1);
-    calendar.set(Calendar.SECOND, 0);
-    calendar.set(Calendar.MILLISECOND, 0);
-    calendar.set(Calendar.YEAR, year);
-
-
-    return calendar.getTime();
+    return null;
   }
 
   private static String replaceMonth(String s) {

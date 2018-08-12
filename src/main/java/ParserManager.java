@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class ParserManager {
-  private int[] priceRange;
   private boolean flag = true;
   private static int counter = 0;
   private String mainUrl;
@@ -132,7 +131,7 @@ public class ParserManager {
     while (flag) {
       try {
         Date before = new Date();
-        System.out.printf("Price Range: min(%s), max(%s)\n", priceRange[0], priceRange[1]);
+        System.out.printf("Start Processing URL: %s\n", mainUrl);
         start(mainUrl);
         int rand = (int) rnd(6, 17);
         TimeUnit.SECONDS.sleep(rand);
@@ -195,7 +194,7 @@ public class ParserManager {
 //                  description + "!Contained searchValue!!! " + searchValue + "\n" + ad.getUrl());
 
 
-        if ((descriptionContainsSearchVal(description, title, searchValue)) && priceInRange(price) && !ads.containsKey(ad) && !ads.containsValue(date)) {
+        if ((descriptionContainsSearchVal(description, title, searchValue)) && !ads.containsKey(ad) && !ads.containsValue(date)) {
           new Thread(new EmailDemon(title, price + " \n" + description + " время: \n" +
                   "" + date + "\n" + ad.getUrl(), emailAdress, emailFrom, password)).start();
 
@@ -225,10 +224,10 @@ public class ParserManager {
     }
   }
 
-  private boolean priceInRange(int price) {
-    return priceRange[0] == 0 && priceRange[1] == 0 || price >= priceRange[0] && price <= priceRange[1];
-
-  }
+//  private boolean priceInRange(int price) {
+//    return priceRange[0] == 0 && priceRange[1] == 0 || price >= priceRange[0] && price <= priceRange[1];
+//
+//  }
 
   private boolean descriptionContainsSearchVal(String description, String title, String searchValue) {
     return searchValue.equals("ns") || description.toLowerCase().contains(searchValue) || title.toLowerCase().contains(searchValue);
@@ -292,13 +291,13 @@ public class ParserManager {
     return Math.round((random * max) + min);
   }
 
-  public int[] getPriceRange() {
-    return priceRange;
-  }
-
-  public void setPriceRange(int[] priceRange) {
-    this.priceRange = priceRange;
-  }
+//  public int[] getPriceRange() {
+//    return priceRange;
+//  }
+//
+//  public void setPriceRange(int[] priceRange) {
+//    this.priceRange = priceRange;
+//  }
 
   public void setEmailFrom(String emailFrom) {
     this.emailFrom = emailFrom;

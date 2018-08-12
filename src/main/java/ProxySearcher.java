@@ -5,7 +5,6 @@ import org.jsoup.select.Elements;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ public class ProxySearcher implements Runnable {
   private static final String PROXY_URL = "https://www.proxynova.com/proxy-server-list";
   private static HashMap<String, Integer> proxyList = new HashMap<>();
   private List<Proxy> proxies = new CopyOnWriteArrayList<>();
+  private static final int SERVERS_LIST_REFRESH_DELAY = 1;
 
   public synchronized List<Proxy> getProxies() {
     return proxies;
@@ -66,7 +66,7 @@ public class ProxySearcher implements Runnable {
       getGoodProxies();
       try {
         proxies = new CopyOnWriteArrayList<>();
-        TimeUnit.MINUTES.sleep(1);
+        TimeUnit.MINUTES.sleep(SERVERS_LIST_REFRESH_DELAY);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
