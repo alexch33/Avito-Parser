@@ -12,7 +12,6 @@ public class Controller {
   private static final String mainUrl = " https://www.avito.ru/rostovskaya_oblast/noutbuki?s=101&user=1";
   private static final String eMail = "big.BOX.yaschik2033@mail.ru";
   private static final String searchValue = "ns";
-  private static final int[] priceRange = new int[2];
   private static final ParserManager parserManager = ParserManager.getInstance();
   private static final Controller controller = new Controller();
   private static final String mail_from = "example@yandex.ru";
@@ -31,11 +30,8 @@ public class Controller {
     String mainUrl = settingsFromFile.get(0);
     String email = settingsFromFile.get(1);
     String searchValue = settingsFromFile.get(2);
-    String[] stringsRangePrice = settingsFromFile.get(3).split("-");
-    priceRange[0] = Integer.parseInt(stringsRangePrice[0]);
-    priceRange[1] = Integer.parseInt(stringsRangePrice[1]);
-    String mail_from = settingsFromFile.get(4);
-    String password = settingsFromFile.get(5);
+    String mail_from = settingsFromFile.get(3);
+    String password = settingsFromFile.get(4);
 
     System.out.println(mainUrl + " " + email + " " + searchValue);
 
@@ -70,9 +66,8 @@ public class Controller {
     defaultValues.add(0, mainUrl);
     defaultValues.add(1, eMail);
     defaultValues.add(2, searchValue);
-    defaultValues.add(3, "0-0");
-    defaultValues.add(4, mail_from);
-    defaultValues.add(5, password);
+    defaultValues.add(3, mail_from);
+    defaultValues.add(4, password);
 
     try {
       BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -100,7 +95,6 @@ public class Controller {
     parserManager.setEmailAdress(email);
     parserManager.setMainUrl(mainUrl);
     parserManager.setSearchValue(searchValue);
-    parserManager.setPriceRange(priceRange);
     parserManager.startPars();
   }
 }
