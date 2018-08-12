@@ -185,10 +185,10 @@ public class ParserManager {
 
 
         Ad ad = AdFactoryFromAdUrl.createNewAd(urlStringEntry.getKey());
-        String title = ad != null ? ad.getTitle() : "";
-        int price = ad != null ? ad.getPrice() : 0;
-        String description = ad != null ? ad.getDescription() : "";
-        Date date = ad != null ? ad.getDate() : null;
+        String title = ad.getTitle();
+        int price = ad.getPrice();
+        String description = ad.getDescription();
+        Date date = ad.getDate();
 //        if (descriptionContainsSearchVal(description, title, searchValue))
 //          System.out.println(title + "\n" +
 //                  price + "\n" +

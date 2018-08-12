@@ -10,16 +10,26 @@ public class AvitoDateParser {
   public static Date avitoDatePars(String date) {
     String hours = getFirstStringGroupRegex(date, "^(\\d+).+(час).*");
     String minutes = getFirstStringGroupRegex(date, "^(\\d+).+(мин).*");
+    String today = getFirstStringGroupRegex(date, "сегодня.+(\\d{2}:\\d{2})");
     if (hours != null) {
       return calculateDateFromHours(hours);
     } else if (minutes != null) {
       return calculateDateFromMinutes(minutes);
+    } else if (today != null) {
+      String todayHours = getFirstStringGroupRegex(today, "(\\d{2}):\\d{2}");
+      String todayMinutes = getFirstStringGroupRegex(today, "\\d{2}:(\\d{2})");
+      if ((todayHours != null) && (todayMinutes != null)) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR, Integer.parseInt(todayHours));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(todayMinutes));
+        return calendar.getTime();
+      }
     }
 
     return null;
   }
 
-  private static String getFirstStringGroupRegex(String userNameString, String pattern){
+   private static String getFirstStringGroupRegex(String userNameString, String pattern){
     Pattern p = Pattern.compile(pattern);
     Matcher m = p.matcher(userNameString);
     if (m.find())
@@ -29,7 +39,7 @@ public class AvitoDateParser {
     return null;
   }
 
-  private static Date calculateDateFromHours(String hoursBack) {
+   private static Date calculateDateFromHours(String hoursBack) {
     if (hoursBack != null) {
       int hours = Integer.parseInt(hoursBack.trim());
       Calendar cal = Calendar.getInstance();
@@ -39,7 +49,7 @@ public class AvitoDateParser {
     return null;
   }
 
-  public static Date calculateDateFromMinutes(String minutesBack) {
+  private static Date calculateDateFromMinutes(String minutesBack) {
     if (minutesBack != null) {
       int minutes = Integer.parseInt(minutesBack.trim());
       Calendar cal = Calendar.getInstance();
