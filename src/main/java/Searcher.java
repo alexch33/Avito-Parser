@@ -68,7 +68,7 @@ class Searcher {
 
       String date = element.getElementsByClass(dateElement).first().text().toLowerCase();
       date = insertVafterToday(date);
-      //System.out.println(date + " getUrlsAnd Dates!!!");
+//      System.out.println(date + " getUrlsAnd Dates!!!");
       Date date1 = AdFactoryFromAdUrl.parseAvitoDate(date);
 
       urlAndTitles.put(url, date1);
