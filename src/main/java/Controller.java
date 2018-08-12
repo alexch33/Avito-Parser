@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class Controller {
-  private static final String mainUrl = " https://www.avito.ru/rostovskaya_oblast/noutbuki?s=101&user=1";
+  private static final String mainUrl = "https://www.avito.ru/rostovskaya_oblast/noutbuki?s=101&user=1";
   private static final String eMail = "big.BOX.yaschik2033@mail.ru";
   private static final String searchValue = "ns";
   private static final ParserManager parserManager = ParserManager.getInstance();
