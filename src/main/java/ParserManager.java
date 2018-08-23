@@ -179,10 +179,7 @@ public class ParserManager {
       if (!AvitoDateParser.isToday(dateFromBoard)) continue;
 
 
-      if (!containsURL(url) ||
-              (containsURL(url) && !datesEquals(url, dateFromBoard))) {
-
-
+      if (!containsURL(url)) {
         Ad ad = AdFactoryFromAdUrl.createNewAd(urlStringEntry.getKey());
         String title = ad.getTitle();
         int price = ad.getPrice();

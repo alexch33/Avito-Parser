@@ -32,7 +32,6 @@ public class AdFactoryFromAdUrl {
       String stringDate = temp2.substring(temp2.lastIndexOf("размещено") + 10, temp2.lastIndexOf("в") + 7).trim();
       Date date = AvitoDateParser.avitoDatePars(stringDate);
       if (date == null) return null;
-
       return new Ad(price, description, title, url, date);
     }
     return null;
