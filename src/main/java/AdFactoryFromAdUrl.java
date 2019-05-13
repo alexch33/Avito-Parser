@@ -2,6 +2,8 @@ import org.jsoup.nodes.Document;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AdFactoryFromAdUrl {
 
@@ -28,8 +30,8 @@ public class AdFactoryFromAdUrl {
       int price = Integer.parseInt(temp);
       String description = document.getElementsByClass("item-description").tagName("p").text();
       String title = document.getElementsByClass("title-info-title-text").text();
-      String temp2 = document.getElementsByClass("title-info-metadata-item").text();
-      String stringDate = temp2.substring(temp2.lastIndexOf("размещено") + 10, temp2.lastIndexOf("в") + 7).trim();
+      String temp2 = document.getElementsByClass("title-info-metadata-item-redesign").text();
+      String stringDate = getTimeFromString(temp2);
       Date date = AvitoDateParser.avitoDatePars(stringDate);
       if (date == null) return null;
       return new Ad(price, description, title, url, date);
@@ -58,5 +60,23 @@ public class AdFactoryFromAdUrl {
     } catch (InterruptedException e1) {
       e1.printStackTrace();
     }
+  }
+
+  private static String getTimeFromString(String line){
+    String string = line.toLowerCase();
+
+    String pattern = "размещено (.*\\d{2}:\\d{2})";
+
+    Pattern r = Pattern.compile(pattern);
+
+    Matcher m = r.matcher(string);
+
+    if (m.find()) {
+      return m.group(1).trim();
+    }else {
+      System.out.println("Time not found in string");
+    }
+
+    return null;
   }
 }
