@@ -22,11 +22,15 @@ public class AdFactoryFromAdUrl {
 
     if (document != null) {
       //достаём цену и содержание
-      String priceText = document.getElementsByClass("price-value-string js-price-value-string").text();
-      String temp;
-      if (priceText.contains("\u20BD")) {
-        temp = priceText.substring(0, priceText.indexOf('\u20BD') - 1).replaceAll(" ", "");
-      } else temp = "0";
+      String priceText = document.getElementsByClass("js-item-price").text();
+      String temp = priceText.substring(0, priceText.length() / 2);
+
+      if (temp.length() > 0) {
+        temp = temp.replaceAll(" ", "");
+      }
+
+      else temp = "0";
+
       int price = Integer.parseInt(temp);
       String description = document.getElementsByClass("item-description").tagName("p").text();
       String title = document.getElementsByClass("title-info-title-text").text();
