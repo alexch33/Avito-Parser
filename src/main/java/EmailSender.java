@@ -10,7 +10,7 @@ public class EmailSender {
   private static final String smtpHost = "smtp.yandex.ru";
 
 
-  public static synchronized void send(String title, String text, String addres, String username, String password) {
+  public static synchronized void send(MessageHTML message, String addres, String username, String password) {
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
@@ -23,8 +23,9 @@ public class EmailSender {
       Session session = Session.getInstance(props, null);
       Message msg = new MimeMessage(session);
       msg.setFrom(new InternetAddress(username));
-      msg.setSubject(title);
-      msg.setText(text);
+      msg.setSubject(message.getTittle());
+      msg.setContent(message.getBody(), "text/html; charset=windows-1251");
+//      System.out.println("Sending message......." + message.getBody());
       msg.setRecipient(Message.RecipientType.TO, new InternetAddress(addres));
       Transport transport = session.getTransport("smtp");
       transport.connect(smtpHost, 587, username, password);

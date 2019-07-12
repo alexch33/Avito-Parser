@@ -1,4 +1,7 @@
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +41,16 @@ public class AdFactoryFromAdUrl {
       String stringDate = getTimeFromString(temp2);
       Date date = AvitoDateParser.avitoDatePars(stringDate);
       if (date == null) return null;
-      return new Ad(price, description, title, url, date);
+
+      List<String> urls = new ArrayList<>();
+      Elements imageEls = document.getElementsByClass("gallery-list-item-link");
+      for (Element el: imageEls) {
+        String imgUrl = el.attr("style").substring(24, el.attr("style").length() - 2);
+        imgUrl = imgUrl.replaceAll("\\d+x\\d+", "640x480");
+        urls.add(imgUrl);
+      }
+
+      return new Ad(price, description, title, url, date, urls.toArray(new String[0]));
     }
     return null;
   }
