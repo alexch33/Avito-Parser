@@ -91,7 +91,7 @@ public class Controller {
     parserManager.setEmailFrom(email_from);
     parserManager.setPassword(password);
     parserManager.startProxySearchThread();
-    parserManager.setEmailAdress(email);
+    parserManager.setEmailTo(email);
     parserManager.setMainUrl(mainUrl);
     parserManager.setSearchValue(searchValue);
     parserManager.startPars();

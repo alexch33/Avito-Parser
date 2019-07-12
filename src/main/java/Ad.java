@@ -8,9 +8,10 @@ public class Ad implements Serializable {
   private String title;
   private URL url;
   private Date date;
+  private String[] photos;
 
 
-  Ad(int price, String description, String title, URL url) {
+  Ad(int price, String description, String title, URL url, Date date, String[] imgsUrls) {
     this.price = price;
 
     if (description.length() > 2)
@@ -20,19 +21,7 @@ public class Ad implements Serializable {
 
     this.title = title;
     this.url = url;
-  }
-
-  public Ad(int price, String description, String title, URL url, Date date) {
-    this.price = price;
-
-    if (description.length() > 2)
-      this.description = description;
-
-    else this.description = "no description";
-
-
-    this.title = title;
-    this.url = url;
+    this.photos = imgsUrls;
     this.date = date;
   }
 
@@ -110,5 +99,9 @@ public class Ad implements Serializable {
     result = 31 * result + (url != null ? url.hashCode() : 0);
     result = 31 * result + (date != null ? date.hashCode() : 0);
     return result;
+  }
+
+  public String[] getPhotos() {
+    return photos;
   }
 }

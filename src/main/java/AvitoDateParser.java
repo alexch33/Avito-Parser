@@ -20,7 +20,7 @@ public class AvitoDateParser {
       String todayMinutes = getFirstStringGroupRegex(today, "\\d{2}:(\\d{2})");
       if ((todayHours != null) && (todayMinutes != null)) {
         Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.HOUR, Integer.parseInt(todayHours));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(todayHours));
         calendar.set(Calendar.MINUTE, Integer.parseInt(todayMinutes));
         return calendar.getTime();
       }

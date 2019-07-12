@@ -14,7 +14,7 @@ public class ParserManager {
   private File file;
   private ObjectInputStream ois;
   private static final File data;
-  private String emailAdress;
+  private String emailTo;
   private String searchValue;
   private String emailFrom;
   private String password;
@@ -59,12 +59,12 @@ public class ParserManager {
     this.mainUrl = mainUrl;
   }
 
-  public String getEmailAdress() {
-    return emailAdress;
+  public String getEmailTo() {
+    return emailTo;
   }
 
-  public void setEmailAdress(String emailAdress) {
-    this.emailAdress = emailAdress;
+  public void setEmailTo(String emailTo) {
+    this.emailTo = emailTo;
   }
 
   static ParserManager getInstance() {
@@ -192,8 +192,10 @@ public class ParserManager {
 
 
         if ((descriptionContainsSearchVal(description, title, searchValue)) && !ads.containsKey(ad) && !ads.containsValue(date)) {
-          new Thread(new EmailDemon(title, price + " \n" + description + " время: \n" +
-                  "" + date + "\n" + ad.getUrl(), emailAdress, emailFrom, password)).start();
+          String messsgeText = price + " \n" + description + " время: \n" + "" + date + "\n" + ad.getUrl();
+          String[] messageImgs = ad.getPhotos();
+          MessageHTML messageHTML = new MessageHTML(title, messsgeText, messageImgs);
+          new Thread(new EmailDemon(messageHTML, emailTo, emailFrom, password)).start();
 
         }
         System.out.println("##########################################################################");
