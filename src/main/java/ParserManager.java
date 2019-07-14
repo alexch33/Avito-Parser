@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.*;
 import java.net.URL;
@@ -20,7 +21,7 @@ public class ParserManager {
   private String password;
 
   static {
-    data = new File(CurrentDir() + File.separator + "ParsersData");
+    data = new File(CurrentDir()  + File.separator + "ParsersData");
     System.out.println(data + File.separator + "ParserData" + " data static Manger");
   }
 
@@ -29,9 +30,13 @@ public class ParserManager {
   }
 
   private static String CurrentDir() {
-    String path = System.getProperty("user.dir");
-    String FileSeparator = System.getProperty("file.separator");
-    return path.substring(0, path.lastIndexOf(FileSeparator) + 1);
+    try {
+      return new File(ParserManager.class.getProtectionDomain().getCodeSource().getLocation()
+              .toURI()).getParent();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
 

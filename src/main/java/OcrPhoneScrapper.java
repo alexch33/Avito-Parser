@@ -63,9 +63,7 @@ public class OcrPhoneScrapper {
 
             setlocale(LC_ALL(), "C");
 
-            File tessData = new File(getClass().getClassLoader().getResource("eng.traineddata").getFile());
-
-            api.Init(tessData.getParent(), "eng");
+            api.Init(ParserManager.getData().getAbsolutePath(), "eng");
 
             ByteBuffer imgBB = ByteBuffer.wrap(imageBytes);
 

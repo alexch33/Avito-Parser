@@ -1,1 +1,2 @@
+file eng.traineddata should placed in ParserData folder
 mvn package assembly:single
