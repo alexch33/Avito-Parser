@@ -3,11 +3,13 @@ public class MessageHTML {
     private String title;
     private String messageText;
     private String[] imgsUrls;
+    private String phoneNumber;
 
-    public MessageHTML(String title, String messageText, String[] messageImgs) {
+    public MessageHTML(String title, String messageText, String[] messageImgs, String phoneNumber) {
         this.title = title;
         this.messageText = messageText;
         this.imgsUrls = messageImgs;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getTittle() {
@@ -25,10 +27,11 @@ public class MessageHTML {
                     "</head>\n" +
                     "<body>\n" +
                     "\n" +
-                        "<h1>\n" +
+                        "<h3>\n" +
                             this.title +
-                        "</h1>\n" +
+                        "</h3>\n" +
                     "\n" +
+                        getPhoneBlock() + "\n" +
                         "<p>\n" +
                             this.messageText +
                         "</p>\n" +
@@ -47,10 +50,14 @@ public class MessageHTML {
         }
 
         for (String imgUrl : this.imgsUrls) {
-            String img = "<img src=" + imgUrl + ">" + "</img>";
+            String img = "<img src='" + imgUrl + "'>" + "</img>";
             stringBuffer.append(img);
         }
 
         return "<div>" + stringBuffer.toString() + "</div>";
+    }
+
+    private String getPhoneBlock() {
+          return "<a href=" + "tel:" + this.phoneNumber.trim() + ">" + this.phoneNumber + "</a>";
     }
 }

@@ -1,7 +1,13 @@
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,15 +21,78 @@ import java.util.logging.Logger;
 
 
 class Searcher {
+  private static List<Proxy> proxyList = new ArrayList<>();
+  private static WebDriver webDriver = getConfiguredWebDriver();
   private File file;
   private final String mainUrl;
   private File data = ParserManager.getData();
   private Document mainDoc = null;
-  private static List<Proxy> proxyList = new ArrayList<>();
   private static final String userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
   private static ProxySetter proxySetter;
   private static final Logger logger = Logger.getLogger("Searcher parse()");
+  private static boolean isWebDriverProxy;
 
+  public static WebDriver getConfiguredWebDriver() {
+    if (webDriver == null) {
+      if (!proxyList.isEmpty()) {
+        webDriver = initializePhantomJSDriver(true);
+        isWebDriverProxy = true;
+      } else {
+        isWebDriverProxy = false;
+        webDriver = initializePhantomJSDriver(false);
+      }
+    } else {
+      try {
+        if (!isWebDriverProxy && !proxyList.isEmpty()) {
+          webDriver.quit();
+          webDriver = null;
+          System.out.println("reconfiguring webdriver with proxy..........");
+          getConfiguredWebDriver();
+        }
+        webDriver.get("https://google.com");
+        System.out.println("Driver working correctly............");
+      } catch (Exception e) {
+        e.printStackTrace();
+        webDriver = null;
+        deleteLastProxy();
+        System.out.println("Driver reinitializing webdriver.........");
+        getConfiguredWebDriver();
+      }
+    }
+
+    return webDriver;
+  }
+
+  private static PhantomJSDriver initializePhantomJSDriver(boolean withProxy) {
+    if (WebDriverManager.phantomjs().getBinaryPath() == null) {
+      System.out.println("Setup phantom...");
+      WebDriverManager.phantomjs().setup();
+    }
+    System.out.println("Phantom binary path: " + WebDriverManager.phantomjs().getBinaryPath());
+
+    DesiredCapabilities caps = new DesiredCapabilities();
+    caps.setJavascriptEnabled(true);
+    caps.setCapability(
+            PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+            WebDriverManager.phantomjs().getBinaryPath()
+    );
+
+    if (withProxy) {
+      System.out.println("setting proxy to driver................" + proxyList.get(0).address());
+      ArrayList<String> cliArgsCap = new ArrayList<>();
+      cliArgsCap.add(String.format("--proxy=%s", proxyList.get(0).address()));
+//      cliArgsCap.add("--proxy-auth=username:password");
+      cliArgsCap.add("--proxy-type=http");
+
+      caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
+    }
+
+    PhantomJSDriver driver = new PhantomJSDriver(caps);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    System.out.println("Phantom initialized successfully, with proxy: " + (withProxy ? proxyList.get(0).address() : false));
+
+    return driver;
+  }
 
   public static void setProxyList(List<Proxy> proxyList) {
     Searcher.proxyList = proxyList;
@@ -106,8 +175,8 @@ class Searcher {
 
     result = getUrlsAndDates(sellBoardElements);
 //        System.out.println("result <<<<<<<<<<<<<<<<<<<<" + result);
-     return result;
-    }
+    return result;
+  }
 
 
   public static Document parse(String url) {
@@ -117,23 +186,23 @@ class Searcher {
       if (!proxyList.isEmpty()) {
         logger.log(Level.WARNING, "Using Proxy...................." + " " + proxyList.get(0) + "\n" + "url: " + url);
         try {
-         document = Jsoup.connect(url)
+          document = Jsoup.connect(url)
                   .userAgent(userAgent)
                   .proxy(proxyList.get(0))
                   .get();
         }catch (IOException e) {
-          e.printStackTrace();
+          System.err.println(e.getMessage());
           deleteLastProxy();
         }
 
       } else {
         logger.log(Level.WARNING, "Without Proxy...................." + "\n" + "url: " + url);
         try {
-         document = Jsoup.connect(url)
+          document = Jsoup.connect(url)
                   .userAgent(userAgent)
                   .get();
         } catch (IOException e) {
-          e.printStackTrace();
+          System.err.println(e.getMessage());
         }
       }
 
@@ -143,8 +212,16 @@ class Searcher {
       }
       e.printStackTrace();
     }
-    assert document != null;
-    System.out.println("Banned: " + document.toString().contains("Доступ с Вашего IP временно ограничен"));
+
+    if (document != null) {
+      System.out.println("Banned: " + document.toString().contains("Доступ с Вашего IP временно ограничен"));
+    } else {
+      if (proxyList.isEmpty()) {
+        System.out.println("No Connection, parsing main URL Failed.");
+      } else {
+        System.out.println("Connection Error, changing proxy...");
+      }
+    }
 
     return document;
   }

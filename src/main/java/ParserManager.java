@@ -164,7 +164,7 @@ public class ParserManager {
     try {
       urlDateMap = searcher.getUrlsAndDatesMapFromFile();
     } catch (IOException e) {
-      e.printStackTrace();
+      System.err.println(e.getMessage());
     }
 
     if (urlDateMap == null || urlDateMap.isEmpty()) {
@@ -194,7 +194,9 @@ public class ParserManager {
         if ((descriptionContainsSearchVal(description, title, searchValue)) && !ads.containsKey(ad) && !ads.containsValue(date)) {
           String messsgeText = price + " \n" + description + " время: \n" + "" + date + "\n" + ad.getUrl();
           String[] messageImgs = ad.getPhotos();
-          MessageHTML messageHTML = new MessageHTML(title, messsgeText, messageImgs);
+          String phoneNumber = ad.getPhoneNumberString();
+
+          MessageHTML messageHTML = new MessageHTML(title, messsgeText, messageImgs, phoneNumber);
           new Thread(new EmailDemon(messageHTML, emailTo, emailFrom, password)).start();
 
         }
