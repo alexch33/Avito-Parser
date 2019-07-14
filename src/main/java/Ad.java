@@ -1,5 +1,6 @@
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Ad implements Serializable {
@@ -9,9 +10,21 @@ public class Ad implements Serializable {
   private URL url;
   private Date date;
   private String[] photos;
+  private String phoneNumberBase64;
+  private String phoneNumberString;
 
+  public String getPhoneNumberString() {
+    if (phoneNumberString == null) {
+      return "phone empty";
+    }
+    return phoneNumberString;
+  }
 
-  Ad(int price, String description, String title, URL url, Date date, String[] imgsUrls) {
+  public void setPhoneNumberString(String phoneNumberString) {
+    this.phoneNumberString = phoneNumberString;
+  }
+
+  Ad(int price, String description, String title, URL url, Date date, String[] imgsUrls, String phoneNumberBase64) {
     this.price = price;
 
     if (description.length() > 2)
@@ -23,8 +36,12 @@ public class Ad implements Serializable {
     this.url = url;
     this.photos = imgsUrls;
     this.date = date;
+    this.phoneNumberBase64 = phoneNumberBase64;
   }
 
+  public String getPhoneNumberBase64() {
+    return phoneNumberBase64;
+  }
 
   public Date getDate() {
     return date;
@@ -69,11 +86,13 @@ public class Ad implements Serializable {
   @Override
   public String toString() {
     return "Ad{" +
-            "price='" + price + '\'' +
+            "price=" + price +
             ", description='" + description + '\'' +
             ", title='" + title + '\'' +
             ", url=" + url +
             ", date=" + date +
+            ", photos=" + Arrays.toString(photos) +
+            ", phoneNumberString='" + phoneNumberString + '\'' +
             '}';
   }
 
