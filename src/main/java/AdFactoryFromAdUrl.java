@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.NoSuchElementException;
 
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -23,16 +24,19 @@ public class AdFactoryFromAdUrl {
     System.out.println("Web driver configured successfully");
   }
 
-  public static Ad createNewAd(URL url) {
+  public static Ad createNewAd(URL url) throws ConnectException {
     Document document = null;
     try {
       document = Searcher.parse(url.toString());
     }catch (Exception e){
       e.printStackTrace();
     }
-    sleep();
+//    sleep();
 
     // web Driver section ****************************************
+    if (document == null) {
+      throw new ConnectException();
+    }
     // Web Driver config
     configureWebDriver();
 
@@ -40,10 +44,12 @@ public class AdFactoryFromAdUrl {
       driver.get(url.toString());
     } catch (Exception e) {
       System.err.println("Driver connection failed trying to reconfigure...");
+      Searcher.deleteLastProxy();
       configureWebDriver();
       try {
         driver.get(url.toString());
       } catch (Exception e1){
+        Searcher.deleteLastProxy();
         System.err.println(e1.getMessage());
         System.out.println("Driver Connection failed, skipping.....");
       }

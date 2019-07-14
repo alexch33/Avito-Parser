@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
@@ -72,6 +73,9 @@ class Searcher {
 
     DesiredCapabilities caps = new DesiredCapabilities();
     caps.setJavascriptEnabled(true);
+    caps.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
+    caps.setCapability("phantomjs.page.settings.loadImages", false);
+
     caps.setCapability(
             PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
             WebDriverManager.phantomjs().getBinaryPath()
@@ -234,7 +238,7 @@ class Searcher {
       System.out.println("Proxy was removed");
     } else {
       try {
-        TimeUnit.MILLISECONDS.sleep(20000);
+        TimeUnit.MILLISECONDS.sleep(10000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

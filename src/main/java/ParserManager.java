@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.*;
@@ -138,7 +139,7 @@ public class ParserManager {
         Date before = new Date();
         System.out.printf("Start Processing URL: %s\n", mainUrl);
         start(mainUrl);
-        int rand = (int) rnd(6, 17);
+        int rand = (int) rnd(1, 5);
         TimeUnit.SECONDS.sleep(rand);
         Date after = new Date();
         long time = after.getTime() - before.getTime();
@@ -163,7 +164,7 @@ public class ParserManager {
   }
 
   //important method
-  private void start(String mainUrl) throws MalformedURLException {
+  private void start(String mainUrl) throws MalformedURLException, ConnectException {
     Searcher searcher = new Searcher(mainUrl);
     Map<URL, Date> urlDateMap = null;
     try {
