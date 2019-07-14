@@ -50,7 +50,8 @@ class Searcher {
           System.out.println("reconfiguring webdriver with proxy..........");
           getConfiguredWebDriver();
         }
-        webDriver.get("https://google.com");
+        System.out.println("Checking driver connection...with ya.ru");
+        webDriver.get("https://ya.ru");
         System.out.println("Driver working correctly............");
       } catch (Exception e) {
         e.printStackTrace();
@@ -74,7 +75,9 @@ class Searcher {
     DesiredCapabilities caps = new DesiredCapabilities();
     caps.setJavascriptEnabled(true);
     caps.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
+    caps.setCapability(CapabilityType.SUPPORTS_NETWORK_CONNECTION, true);
     caps.setCapability("phantomjs.page.settings.loadImages", false);
+    caps.setCapability("--disk-cache",  true);
 
     caps.setCapability(
             PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
@@ -92,7 +95,9 @@ class Searcher {
     }
 
     PhantomJSDriver driver = new PhantomJSDriver(caps);
-    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    driver.manage().timeouts().pageLoadTimeout(60000, TimeUnit.MILLISECONDS);
+    driver.manage().timeouts().implicitlyWait(5000, TimeUnit.MILLISECONDS);
+
     System.out.println("Phantom initialized successfully, with proxy: " + (withProxy ? proxyList.get(0).address() : false));
 
     return driver;

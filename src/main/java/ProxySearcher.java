@@ -51,7 +51,7 @@ public class ProxySearcher implements Runnable {
      for (Map.Entry<String, Integer> ipPort : proxyList.entrySet()) {
        try {
          Proxy test = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ipPort.getKey(), ipPort.getValue()));
-         Jsoup.connect("https://www.google.ru/").timeout(10000).proxy(test).get();
+         Jsoup.connect("https://www.avito.ru/").timeout(5000).proxy(test).get();
          System.out.println("Proxy was found!" + test);
          proxies.add(test);
        } catch (Exception e) {

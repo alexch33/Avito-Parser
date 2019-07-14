@@ -41,7 +41,9 @@ public class AdFactoryFromAdUrl {
     configureWebDriver();
 
     try {
+      System.out.println("Driver going to " + url.toString());
       driver.get(url.toString());
+      System.out.println("Driver done url: " + url.toString());
     } catch (Exception e) {
       System.err.println("Driver connection failed trying to reconfigure...");
       Searcher.deleteLastProxy();
@@ -52,17 +54,18 @@ public class AdFactoryFromAdUrl {
         Searcher.deleteLastProxy();
         System.err.println(e1.getMessage());
         System.out.println("Driver Connection failed, skipping.....");
+        throw new ConnectException();
       }
     }
 
     String phoneNumberBase64 = null;
     try {
       // Достаём кнопку, жмём и пробуем получить елемент с картинкой номера телефона
+        System.out.println("Clicking phone button...");
         driver.findElement(
               By.className("item-phone-number")).findElement(By.tagName("a")).click();
 
-      TimeUnit.MILLISECONDS.sleep(1000);
-
+      System.out.println("Getting phone image...");
       phoneNumberBase64 = driver.findElement(
               By.className("item-phone-button_with-img")).findElement(By.tagName("img")).getAttribute("src");
     } catch (NoSuchElementException e1) {
@@ -73,9 +76,6 @@ public class AdFactoryFromAdUrl {
     }
     // web Driver section ****************************************
 
-    System.out.println("document is null: " + (document == null));
-
-    if (document != null) {
       //достаём цену и содержание
       String priceText = document.getElementsByClass("js-item-price").text();
       String temp = priceText.substring(0, priceText.length() / 2);
@@ -115,8 +115,6 @@ public class AdFactoryFromAdUrl {
       ad.setPhoneNumberString(OcrPhoneScrapper.getInstance().ocrPhoneFromBase64Picture(ad.getPhoneNumberBase64()));
 
       return ad;
-    }
-    return null;
   }
 
   public static Date parseAvitoDate(String date) {

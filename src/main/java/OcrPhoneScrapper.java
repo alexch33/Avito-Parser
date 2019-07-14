@@ -15,7 +15,7 @@ import static org.bytedeco.tesseract.presets.tesseract.LC_ALL;
 import static org.bytedeco.tesseract.presets.tesseract.setlocale;
 
 public class OcrPhoneScrapper {
-    private static final int OCR_COLOR_THRESHOLD = 100;
+    private static final int OCR_COLOR_THRESHOLD = 127;
     private static OcrPhoneScrapper ocrPhoneScrapper = null;
 
     private OcrPhoneScrapper(){}
