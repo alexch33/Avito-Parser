@@ -143,7 +143,7 @@ public class AdFactoryFromAdUrl {
   private static String getTimeFromString(String line){
     String string = line.toLowerCase();
 
-    String pattern = "размещено (.*\\d{2}:\\d{2})";
+    String pattern = "размещено|сегодня (.*\\d{2}:\\d{2})";
 
     Pattern r = Pattern.compile(pattern);
 
