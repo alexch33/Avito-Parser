@@ -10,7 +10,7 @@ public class AvitoDateParser {
   public static Date avitoDatePars(String date) {
     String hours = getFirstStringGroupRegex(date, "^(\\d+).+(час).*");
     String minutes = getFirstStringGroupRegex(date, "^(\\d+).+(мин).*");
-    String today = getFirstStringGroupRegex(date, "сегодня.+(\\d{2}:\\d{2})");
+    String today = getFirstStringGroupRegex(date, ".*(\\d{2}:\\d{2})");
     if (hours != null) {
       return calculateDateFromHours(hours);
     } else if (minutes != null) {
