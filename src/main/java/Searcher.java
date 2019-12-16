@@ -133,7 +133,6 @@ class Searcher {
   }
 
   private Map<URL, Date> getUrlsAndDates(Elements elements) throws MalformedURLException {
-
     Map<URL, Date> urlAndTitles = new HashMap<>();
     String linkElement = "href";
     String dateElement = "c-2";//!!!!!!!!
