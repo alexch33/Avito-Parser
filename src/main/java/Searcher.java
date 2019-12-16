@@ -55,14 +55,13 @@ class Searcher {
   }
 
   private Map<URL, Date> getUrlsAndDates(Elements elements) throws MalformedURLException {
-
     Map<URL, Date> urlAndTitles = new HashMap<>();
     String linkElement = "href";
     String dateElement = "c-2";//!!!!!!!!
 
     for (Element element : elements) {
 //            System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + element.text());
-      String link = element.getElementsByClass("item-description-title-link").attr("href");
+      String link = element.getElementsByClass("snippet-link").attr("href");
 
       URL url = new URL("https://www.avito.ru" + link);
 
