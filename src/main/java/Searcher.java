@@ -140,7 +140,7 @@ class Searcher {
 
     for (Element element : elements) {
 //            System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + element.text());
-      String link = element.getElementsByClass("item-description-title-link").attr("href");
+      String link = element.getElementsByClass("snippet-link").attr("href");
 
       URL url = new URL("https://www.avito.ru" + link);
 
