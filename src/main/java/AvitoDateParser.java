@@ -30,6 +30,8 @@ public class AvitoDateParser {
   }
 
    private static String getFirstStringGroupRegex(String userNameString, String pattern){
+    if (userNameString == null) return  null;
+
     Pattern p = Pattern.compile(pattern);
     Matcher m = p.matcher(userNameString);
     if (m.find())
