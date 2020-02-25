@@ -181,6 +181,9 @@ public class ParserManager {
 
       if (!containsURL(url)) {
         Ad ad = AdFactoryFromAdUrl.createNewAd(urlStringEntry.getKey());
+
+        if (ad == null) continue;
+
         String title = ad.getTitle();
         int price = ad.getPrice();
         String description = ad.getDescription();

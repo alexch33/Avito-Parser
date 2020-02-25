@@ -90,7 +90,7 @@ public class AdFactoryFromAdUrl {
     if (m.find()) {
       return m.group(1).trim();
     }else {
-      System.out.println("Time not found in string");
+      System.out.println("Time not found in string: " + line);
     }
 
     return null;
