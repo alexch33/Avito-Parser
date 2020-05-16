@@ -45,7 +45,7 @@ public class AdFactoryFromAdUrl {
       List<String> urls = new ArrayList<>();
       Elements imageEls = document.getElementsByClass("gallery-list-item-link");
       for (Element el: imageEls) {
-        String imgUrl = el.attr("style").substring(24, el.attr("style").length() - 2);
+        String imgUrl = el.attr("src");
         imgUrl = imgUrl.replaceAll("\\d+x\\d+", "640x480");
         urls.add(imgUrl);
       }
