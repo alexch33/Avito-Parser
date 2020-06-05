@@ -151,7 +151,10 @@ public class ParserManager {
   private boolean containsURL(URL key) {
     boolean result = false;
     for (Map.Entry<Ad, Date> pair : ads.entrySet()) {
-      if (pair.getKey().getUrl().equals(key)) result = true;
+      if (pair.getKey().getUrl().equals(key)) {
+        result = true;
+        break;
+      }
     }
     // System.out.println(result + " url contains : true");
     return result;
