@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ParserManager {
   private boolean flag = true;
-  private static int counter = 0;
   private String mainUrl;
   private Map<Ad, Date> ads = new HashMap<>();
   private File file;
@@ -137,7 +136,7 @@ public class ParserManager {
         TimeUnit.SECONDS.sleep(rand);
         Date after = new Date();
         long time = after.getTime() - before.getTime();
-        System.out.println("parsing page done, time reamaning ms: " + time + "   seconds: " + new Date(time).getSeconds());
+        System.out.println("parsing page done, time reamaning ms: " + time);
 
 
       } catch (Exception e) {
@@ -236,33 +235,6 @@ public class ParserManager {
 
   private boolean descriptionContainsSearchVal(String description, String title, String searchValue) {
     return searchValue.equals("ns") || description.toLowerCase().contains(searchValue) || title.toLowerCase().contains(searchValue);
-  }
-
-  private boolean datesEquals(URL url, Date dateFromBoard) {
-    boolean result = false;
-    for (Ad ad : ads.keySet()) {
-      if (ad.getUrl().equals(url)) {
-
-        Calendar calendar1 = new GregorianCalendar();
-        Calendar calendar2 = new GregorianCalendar();
-
-        calendar1.setTime(ad.getDate());
-        calendar1.set(Calendar.SECOND, 0);
-        calendar1.set(Calendar.MILLISECOND, 0);
-
-        calendar2.setTime(dateFromBoard);
-        calendar2.set(Calendar.SECOND, 0);
-        calendar2.set(Calendar.MILLISECOND, 0);
-
-        System.out.println("ad's date:" + ad.getDate() + "\ndate from board:  " + dateFromBoard +
-                "\nequals: " + calendar1.getTime().equals(calendar2.getTime()));
-        if (calendar1.getTime().equals(calendar2.getTime())) result = true;//!!!!!!!!!!!!!!!!!!
-      }
-
-    }
-
-
-    return result;
   }
 
   private Path saveSetAndCreateNewFile() throws IOException {

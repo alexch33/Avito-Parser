@@ -79,6 +79,7 @@ public class Controller {
         count++;
         str = reader.readLine();
       }
+      reader.close();
       if (strings.size() == 5) return strings;
 
     } catch (IOException e) {

@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.Date;
 
 public class Ad implements Serializable {
+  private static final long serialVersionUID = 0;
   private int price;
   private String description;
   private String title;
