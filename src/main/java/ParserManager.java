@@ -164,7 +164,7 @@ public class ParserManager {
     Searcher searcher = new Searcher(mainUrl);
     Map<URL, Date> urlDateMap = null;
     try {
-      urlDateMap = searcher.getUrlsAndDatesMapFromFile();
+      urlDateMap = searcher.getUrlsAndDatesMapFromMainUrl();
     } catch (IOException e) {
       e.printStackTrace();
     }

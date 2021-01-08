@@ -59,12 +59,13 @@ class Searcher {
     String dateElement = "snippet-date-info";//!!!!!!!!
 
     for (Element element : elements) {
-//            System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + element.text());
-      String link = element.getElementsByClass("snippet-link").attr("href");
+//            System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + element);
+      String link = element.select("a[class^='link-link']").attr("href");
 
       URL url = new URL("https://www.avito.ru" + link);
 
-      String date = element.getElementsByClass(dateElement).first().text().toLowerCase();
+      String date = element.select("div[class^='iva-item-dateStep']").text().toLowerCase();
+//      System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + date);
       date = insertVafterToday(date);
 //      System.out.println(date + " getUrlsAnd Dates!!!");
       Date date1 = AdFactoryFromAdUrl.parseAvitoDate(date);
@@ -82,7 +83,7 @@ class Searcher {
     return stringBuffer.toString();
   }
 
-  Map<URL, Date> getUrlsAndDatesMapFromFile() throws IOException {
+  Map<URL, Date> getUrlsAndDatesMapFromMainUrl() throws IOException {
     Map<URL, Date> result;
     try {
       TimeUnit.MILLISECONDS.sleep(ParserManager.rnd(300, 1000));
@@ -100,7 +101,7 @@ class Searcher {
     Document doc = parse(mainUrl);
 
     Elements sellBoardElements = new Elements();
-    sellBoardElements = doc.select(".item_table-description");
+    sellBoardElements = doc.select("div[class^='iva-item-root']");
 
     result = getUrlsAndDates(sellBoardElements);
 //        System.out.println("result <<<<<<<<<<<<<<<<<<<<" + result);
