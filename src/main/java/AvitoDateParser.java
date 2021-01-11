@@ -18,6 +18,8 @@ public class AvitoDateParser {
         Calendar calendar = new GregorianCalendar();
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(todayHours));
         calendar.set(Calendar.MINUTE, Integer.parseInt(todayMinutes));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
       }
     }

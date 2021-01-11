@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 public class Controller {
   private static final String mainUrl = "https://www.avito.ru/rostovskaya_oblast/noutbuki?s=101&user=1";
-  private static final String eMail = "big.BOX.yaschik2033@mail.ru";
+  private static final String eMail = "mail@yandex.ru";
   private static final String searchValue = "ns";
   private static final ParserManager parserManager = ParserManager.getInstance();
   private static final Controller controller = new Controller();
-  private static final String mail_from = "example@yandex.ru";
-  private static final String password = "secret";
+  private static final String mail_from = "mailc@gmail.com";
+  private static final String password = "password";
 
 
   public static void main(String[] args) throws IOException {

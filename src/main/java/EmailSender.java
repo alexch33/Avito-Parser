@@ -1,16 +1,13 @@
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class EmailSender {
-  private static final String smtpHost = "smtp.yandex.ru";
+  private static final String smtpHost = "smtp.gmail.com";
 
 
-  public static synchronized void send(MessageHTML message, String addres, String username, String password) {
+  public static synchronized void send(MessageHTML message, String addres, final String username, final String password) {
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.starttls.enable", "true");
@@ -20,7 +17,11 @@ public class EmailSender {
     props.put("mail.smtp.pwd", password);
 
     try {
-      Session session = Session.getInstance(props, null);
+      Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+        }
+    });
       Message msg = new MimeMessage(session);
       msg.setFrom(new InternetAddress(username));
       msg.setSubject(message.getTittle());
