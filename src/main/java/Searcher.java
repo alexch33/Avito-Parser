@@ -64,7 +64,7 @@ class Searcher {
 
       URL url = new URL("https://www.avito.ru" + link);
 
-      String date = element.select("div[class^='iva-item-dateStep']").text().toLowerCase();
+      String date = element.select("div[class^='date-text']").text().toLowerCase();
 //      System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + date);
       date = insertVafterToday(date);
 //      System.out.println(date + " getUrlsAnd Dates!!!");
