@@ -5,7 +5,6 @@ import java.util.*;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-
 public class ParserManager {
   private boolean flag = true;
   private String mainUrl;
@@ -17,6 +16,7 @@ public class ParserManager {
   private String searchValue;
   private String emailFrom;
   private String password;
+  private int[] interval = new int[] { 60 * 2, 60 * 3 };
 
   static {
     data = new File(CurrentDir() + File.separator + "ParsersData");
@@ -32,7 +32,6 @@ public class ParserManager {
     String FileSeparator = System.getProperty("file.separator");
     return path.substring(0, path.lastIndexOf(FileSeparator) + 1);
   }
-
 
   public String getSearchValue() {
     return searchValue;
@@ -87,18 +86,20 @@ public class ParserManager {
   }
 
   private ParserManager() {
-    if (!data.exists()) try {
-      Files.createDirectories(data.toPath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    if (!data.exists())
+      try {
+        Files.createDirectories(data.toPath());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     file = new File(data + File.separator + "admap.ser");
-    if (Files.notExists(file.toPath())) try {
-      System.out.println("file creating " + file);
-      Files.createFile(file.toPath());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    if (Files.notExists(file.toPath()))
+      try {
+        System.out.println("file creating " + file);
+        Files.createFile(file.toPath());
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
 
     try {
       FileInputStream fis = new FileInputStream(file);
@@ -116,7 +117,6 @@ public class ParserManager {
       e.printStackTrace();
     }
 
-
     if (ads == null) {
       ads = new HashMap<Ad, Date>();
       System.out.println("new ads");
@@ -132,20 +132,19 @@ public class ParserManager {
         Date before = new Date();
         System.out.printf("Start Processing URL: %s\n", mainUrl);
         start(mainUrl);
-        int rand = (int) rnd(6, 17);
+        int rand = (int) rnd(interval[0], interval[1]);
         TimeUnit.SECONDS.sleep(rand);
         Date after = new Date();
         long time = after.getTime() - before.getTime();
         System.out.println("parsing page done, time reamaning ms: " + time);
 
-
       } catch (Exception e) {
         e.printStackTrace();
       }
-      if (!flag) break;
+      if (!flag)
+        break;
     }
   }
-
 
   private boolean containsURL(URL key) {
     boolean result = false;
@@ -159,7 +158,7 @@ public class ParserManager {
     return result;
   }
 
-  //important method
+  // important method
   private void start(String mainUrl) throws MalformedURLException {
     Searcher searcher = new Searcher(mainUrl);
     Map<URL, Date> urlDateMap = null;
@@ -178,25 +177,22 @@ public class ParserManager {
       URL url = urlStringEntry.getKey();
       Date dateFromBoard = urlStringEntry.getValue();
       System.out.println("Url seen: " + url + " date: " + (dateFromBoard == null ? "Not Today" : dateFromBoard));
-      if (!AvitoDateParser.isToday(dateFromBoard)) continue;
-
+      if (!AvitoDateParser.isToday(dateFromBoard))
+        continue;
 
       if (!containsURL(url)) {
         Ad ad = AdFactoryFromAdUrl.createNewAd(urlStringEntry.getKey());
 
-        if (ad == null) continue;
+        if (ad == null)
+          continue;
 
         String title = ad.getTitle();
         int price = ad.getPrice();
         String description = ad.getDescription();
         Date date = ad.getDate();
-//        if (descriptionContainsSearchVal(description, title, searchValue))
-//          System.out.println(title + "\n" +
-//                  price + "\n" +
-//                  description + "!Contained searchValue!!! " + searchValue + "\n" + ad.getUrl());
 
-
-        if ((descriptionContainsSearchVal(description, title, searchValue)) && !ads.containsKey(ad) && !ads.containsValue(date)) {
+        if ((descriptionContainsSearchVal(description, title, searchValue)) && !ads.containsKey(ad)
+            && !ads.containsValue(date)) {
           String messsgeText = price + " \n" + description + " время: \n" + "" + date + "\n" + ad.getUrl();
           String[] messageImgs = ad.getPhotos();
           MessageHTML messageHTML = new MessageHTML(title, messsgeText, messageImgs);
@@ -207,7 +203,6 @@ public class ParserManager {
         System.out.println(ad);
         System.out.println(ads.size() + " ads.size()");
         System.out.println("##########################################################################");
-
 
         if (!ads.containsKey(ad)) {
           ads.put(ad, date);
@@ -228,13 +223,9 @@ public class ParserManager {
     }
   }
 
-//  private boolean priceInRange(int price) {
-//    return priceRange[0] == 0 && priceRange[1] == 0 || price >= priceRange[0] && price <= priceRange[1];
-//
-//  }
-
   private boolean descriptionContainsSearchVal(String description, String title, String searchValue) {
-    return searchValue.equals("ns") || description.toLowerCase().contains(searchValue) || title.toLowerCase().contains(searchValue);
+    return searchValue.equals("ns") || description.toLowerCase().contains(searchValue)
+        || title.toLowerCase().contains(searchValue);
   }
 
   private Path saveSetAndCreateNewFile() throws IOException {
@@ -245,7 +236,6 @@ public class ParserManager {
     ads = new HashMap<>();
     return target;
   }
-
 
   private void setSerialize() {
     try {
@@ -267,14 +257,6 @@ public class ParserManager {
     final double random = Math.random();
     return Math.round((random * max) + min);
   }
-
-//  public int[] getPriceRange() {
-//    return priceRange;
-//  }
-//
-//  public void setPriceRange(int[] priceRange) {
-//    this.priceRange = priceRange;
-//  }
 
   public void setEmailFrom(String emailFrom) {
     this.emailFrom = emailFrom;

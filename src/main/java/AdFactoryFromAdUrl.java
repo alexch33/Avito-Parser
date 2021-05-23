@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AdFactoryFromAdUrl {
+  private static final int[] interval = new int[] { 2500, 6000 };
 
   private AdFactoryFromAdUrl() {
   }
@@ -17,14 +18,13 @@ public class AdFactoryFromAdUrl {
     Document document = null;
     try {
       document = Searcher.parse(url.toString());
-    }catch (Exception e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
     sleep();
 
-
     if (document != null) {
-      //достаём цену и содержание
+      // достаём цену и содержание
       String priceText = document.getElementsByClass("js-item-price").text();
       String temp = priceText.substring(0, priceText.length() / 2);
 
@@ -32,19 +32,22 @@ public class AdFactoryFromAdUrl {
         temp = temp.replaceAll(" ", "");
       }
 
-      else temp = "0";
-
+      else
+        temp = "0";
+      
+      temp = temp.replaceAll("[^0-9]+", "");
       int price = Integer.parseInt(temp);
       String description = document.getElementsByClass("item-description").tagName("p").text();
       String title = document.getElementsByClass("title-info-title-text").text();
       String temp2 = document.getElementsByClass("title-info-metadata-item-redesign").text();
       String stringDate = getTimeFromString(temp2);
       Date date = AvitoDateParser.avitoDatePars(stringDate);
-      if (date == null) return null;
+      if (date == null)
+        return null;
 
       List<String> urls = new ArrayList<>();
       Elements imageEls = document.getElementsByClass("gallery-list-item-link");
-      for (Element el: imageEls) {
+      for (Element el : imageEls) {
         String imgUrl = el.attr("src");
         imgUrl = imgUrl.replaceAll("\\d+x\\d+", "640x480");
         urls.add(imgUrl);
@@ -57,9 +60,6 @@ public class AdFactoryFromAdUrl {
 
   public static Date parseAvitoDate(String date) {
 
-
-//        System.out.println("parseravitodate " + date);
-
     Date result;
 
     result = AvitoDateParser.avitoDatePars(date);
@@ -67,10 +67,9 @@ public class AdFactoryFromAdUrl {
 
   }
 
-
   private static void sleep() {
     try {
-      int a = (int) ParserManager.rnd(2000, 6000);
+      int a = (int) ParserManager.rnd(interval[0], interval[1]);
 
       TimeUnit.MILLISECONDS.sleep(a);
     } catch (InterruptedException e1) {
@@ -78,7 +77,7 @@ public class AdFactoryFromAdUrl {
     }
   }
 
-  private static String getTimeFromString(String line){
+  private static String getTimeFromString(String line) {
     String string = line.toLowerCase();
 
     String pattern = "сегодня.*(\\d{2}:\\d{2})";
@@ -89,7 +88,7 @@ public class AdFactoryFromAdUrl {
 
     if (m.find()) {
       return m.group(1).trim();
-    }else {
+    } else {
       System.out.println("Time not found in string: " + line);
     }
 

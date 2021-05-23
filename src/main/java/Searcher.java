@@ -23,6 +23,7 @@ class Searcher {
   private static final String userAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36";
   private static ProxySetter proxySetter;
   private static final Logger logger = Logger.getLogger("Searcher parse()");
+  private int[] interval = new int[]{1000, 2000};
 
 
   public static void setProxyList(List<Proxy> proxyList) {
@@ -56,7 +57,6 @@ class Searcher {
 
   private Map<URL, Date> getUrlsAndDates(Elements elements) throws MalformedURLException {
     Map<URL, Date> urlAndTitles = new HashMap<>();
-    String dateElement = "snippet-date-info";//!!!!!!!!
 
     for (Element element : elements) {
 //            System.out.println("elementelement&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + element);
@@ -86,7 +86,7 @@ class Searcher {
   Map<URL, Date> getUrlsAndDatesMapFromMainUrl() throws IOException {
     Map<URL, Date> result;
     try {
-      TimeUnit.MILLISECONDS.sleep(ParserManager.rnd(300, 1000));
+      TimeUnit.MILLISECONDS.sleep(ParserManager.rnd(interval[0], interval[1]));
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
